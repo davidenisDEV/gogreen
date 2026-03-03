@@ -30,10 +30,10 @@ export default function AdminPage() {
     salesCount: 0,
     totalStockValue: 0,
     stockHealth: 0,
-    topProducts: []
+    topProducts: [] as any[]
   });
-  const [salesData, setSalesData] = useState([]);
-  const [inventoryData, setInventoryData] = useState([]);
+  const [salesData, setSalesData] = useState<any[]>([]);
+  const [inventoryData, setInventoryData] = useState<any[]>([]);
 
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
