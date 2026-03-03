@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { MessageSquare, X, ShoppingBag, HelpCircle } from "lucide-react";
-import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 
 export function WhatsAppBtn() {
   const [isOpen, setIsOpen] = useState(false);
 
   const openWhatsApp = (msg: string) => {
-    // Usa o número configurado no site-config.ts
-    const url = `https://wa.me/${siteConfig.business.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+    // Número da tabacaria fixado diretamente para evitar erros de tipagem no deploy
+    const url = `https://wa.me/5585996699921?text=${encodeURIComponent(msg)}`;
     window.open(url, "_blank");
   };
 
