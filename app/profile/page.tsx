@@ -86,7 +86,7 @@ export default function ProfilePage() {
     if (profile) {
       setFormData({
         full_name: profile.full_name || "",
-        phone: profile.phone || "",
+        phone: (profile as any).phone || "", 
       });
       loadAddresses();
     }
