@@ -10,7 +10,6 @@ import {
   LogOut, 
   MapPin, 
   User, 
-  Phone, 
   Loader2, 
   Camera, 
   Package, 
@@ -20,7 +19,7 @@ import {
   Plus, 
   Trash2,
   Home,
-  ArrowLeft
+  ShieldCheck
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -71,7 +70,6 @@ export default function ProfilePage() {
           city: data.localidade,
           state: data.uf
         }));
-        // Feedback visual de sucesso no preenchimento
         showMessage('success', "Endereço localizado!");
       } else {
         showMessage('error', "CEP não encontrado.");
@@ -137,7 +135,6 @@ export default function ProfilePage() {
     if (!user) return;
     setSaving(true);
 
-    // Garantimos que todos os campos esperados pelo banco estão aqui
     const { error } = await supabase
       .from("addresses")
       .insert([{ 
@@ -199,28 +196,29 @@ export default function ProfilePage() {
     }
   };
 
+  // Tela de Loading no modo escuro
   if (isLoading) return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen flex items-center justify-center bg-urban-black">
       <Loader2 className="w-10 h-10 animate-spin text-green-neon" />
     </div>
   );
 
   return (
-    <main className="min-h-screen bg-zinc-50 pb-20">
+    <main className="min-h-screen bg-urban-black pb-20 selection:bg-green-neon selection:text-black">
       <Navbar />
 
       <div className="container mx-auto px-6 pt-32 max-w-4xl">
         {/* Header de Perfil */}
-        <div className="bg-white rounded-[40px] p-8 shadow-sm border border-zinc-100 mb-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-green-soft/30 rounded-full blur-3xl -mr-32 -mt-32"></div>
+        <div className="bg-zinc-900 rounded-[40px] p-8 shadow-sm border border-zinc-800 mb-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-green-neon/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
           
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
             <div className="relative group">
-              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-neon shadow-xl bg-zinc-100">
+              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-neon shadow-[0_0_15px_rgba(57,255,20,0.2)] bg-zinc-950">
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-zinc-400">
+                  <div className="w-full h-full flex items-center justify-center text-zinc-500">
                     <User className="w-12 h-12" />
                   </div>
                 )}
@@ -228,7 +226,7 @@ export default function ProfilePage() {
               <button 
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="absolute bottom-0 right-0 bg-urban-black text-white p-2.5 rounded-full hover:bg-green-forest transition-colors shadow-lg"
+                className="absolute bottom-0 right-0 bg-green-neon text-black p-2.5 rounded-full hover:bg-white transition-colors shadow-lg"
               >
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
               </button>
@@ -236,42 +234,55 @@ export default function ProfilePage() {
             </div>
 
             <div className="text-center md:text-left flex-1">
-              <h1 className="font-display text-3xl text-urban-black uppercase italic leading-none mb-2">
-                {profile?.full_name || "Membro GoGreen"}
-              </h1>
-              <p className="text-zinc-500 font-medium mb-4">{user?.email}</p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                <span className="bg-green-soft text-green-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                  Status: VIP 🍁
-                </span>
-                <button onClick={signOut} className="text-red-500 text-xs font-bold uppercase hover:underline flex items-center gap-1">
-                  <LogOut className="w-3 h-3" /> Sair da conta
-                </button>
-              </div>
-            </div>
+                <h1 className="font-display text-3xl text-white uppercase italic leading-none mb-2">
+                    {profile?.full_name || "Membro GoGreen"}
+                </h1>
+                <p className="text-zinc-400 font-medium mb-4">{user?.email}</p>
+                
+                <div className="flex flex-wrap justify-center md:justify-start gap-3 items-center">
+                    <span className="bg-green-neon/10 text-green-neon border border-green-neon/20 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                    Status: VIP 🍁
+                    </span>
+
+                    {/* BOTÃO ADMIN - SÓ APARECE SE A ROLE FOR 'admin' */}
+                    {profile?.role === 'admin' && (
+                    <Link 
+                        href="/admin" 
+                        className="bg-purple-500/10 text-purple-400 border border-purple-500/20 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-purple-500 hover:text-white transition-colors flex items-center gap-1 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+                    >
+                        <ShieldCheck className="w-3 h-3" /> Painel Admin
+                    </Link>
+                    )}
+
+                    <button onClick={signOut} className="text-red-500 text-xs font-bold uppercase hover:underline flex items-center gap-1 transition-colors hover:text-red-400 ml-2">
+                    <LogOut className="w-3 h-3" /> Sair da conta
+                    </button>
+                    </div>
+                </div>
           </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* Coluna de Dados */}
           <div className="md:col-span-2 space-y-8">
-            <section className="bg-white rounded-[32px] p-8 border border-zinc-100 shadow-sm">
-              <h2 className="font-display text-xl uppercase italic mb-6 flex items-center gap-2">
-                <User className="w-5 h-5 text-green-forest" /> Meus Dados
+            <section className="bg-zinc-900 rounded-[32px] p-8 border border-zinc-800 shadow-sm">
+              <h2 className="font-display text-xl text-white uppercase italic mb-6 flex items-center gap-2">
+                <User className="w-5 h-5 text-green-neon" /> Meus Dados
               </h2>
               <form onSubmit={handleUpdateProfile} className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-zinc-400 uppercase ml-1">Nome Completo</label>
+                  <label className="text-[10px] font-black text-zinc-500 uppercase ml-1">Nome Completo</label>
                   <input 
-                    className="w-full bg-zinc-50 border border-zinc-100 p-4 rounded-2xl outline-none focus:border-green-neon transition-all font-medium"
+                    className="w-full bg-zinc-950 border border-zinc-800 text-white p-4 rounded-2xl outline-none focus:border-green-neon transition-all font-medium placeholder-zinc-700"
                     value={formData.full_name}
+                    placeholder="Seu nome"
                     onChange={(e) => setFormData({...formData, full_name: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-zinc-400 uppercase ml-1">WhatsApp</label>
+                  <label className="text-[10px] font-black text-zinc-500 uppercase ml-1">WhatsApp</label>
                   <input 
-                    className="w-full bg-zinc-50 border border-zinc-100 p-4 rounded-2xl outline-none focus:border-green-neon transition-all font-medium"
+                    className="w-full bg-zinc-950 border border-zinc-800 text-white p-4 rounded-2xl outline-none focus:border-green-neon transition-all font-medium placeholder-zinc-700"
                     value={formData.phone}
                     placeholder="(85) 9..."
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
@@ -280,7 +291,7 @@ export default function ProfilePage() {
                 <button 
                   type="submit" 
                   disabled={saving}
-                  className="md:col-span-2 bg-urban-black text-green-neon font-display py-4 rounded-2xl hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
+                  className="md:col-span-2 bg-green-neon text-black font-display py-4 rounded-2xl hover:scale-[1.01] hover:bg-white transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(57,255,20,0.2)]"
                 >
                   {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Save className="w-5 h-5" /> SALVAR ALTERAÇÕES</>}
                 </button>
@@ -288,51 +299,53 @@ export default function ProfilePage() {
             </section>
 
             {/* Endereços */}
-            <section className="bg-white rounded-[32px] p-8 border border-zinc-100 shadow-sm">
+            <section className="bg-zinc-900 rounded-[32px] p-8 border border-zinc-800 shadow-sm">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="font-display text-xl uppercase italic flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-green-forest" /> Moradas de Entrega
+                <h2 className="font-display text-xl text-white uppercase italic flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-green-neon" /> Moradas de Entrega
                 </h2>
                 <button 
                   onClick={() => setShowAddAddress(!showAddAddress)}
-                  className="p-2 bg-green-soft text-green-forest rounded-full hover:bg-green-neon transition-colors"
+                  className="p-2 bg-green-neon/10 text-green-neon border border-green-neon/20 rounded-full hover:bg-green-neon hover:text-black transition-colors"
                 >
                   <Plus className="w-5 h-5" />
                 </button>
               </div>
 
               {showAddAddress && (
-                <form onSubmit={handleAddAddress} className="bg-zinc-50 p-6 rounded-[24px] mb-6 grid grid-cols-2 md:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4">
-                   <input className="col-span-2 md:col-span-1 p-3 rounded-xl border border-zinc-200 text-sm" placeholder="Apelido (Ex: Casa)" value={newAddress.label} onChange={e => setNewAddress({...newAddress, label: e.target.value})} required />
-                   <input className="col-span-2 p-3 rounded-xl border border-zinc-200 text-sm" placeholder="Rua / Logradouro" value={newAddress.street} onChange={e => setNewAddress({...newAddress, street: e.target.value})} required />
-                   <input className="p-3 rounded-xl border border-zinc-200 text-sm" placeholder="Nº" value={newAddress.number} onChange={e => setNewAddress({...newAddress, number: e.target.value})} required />
-                   <input className="p-3 rounded-xl border border-zinc-200 text-sm" placeholder="Bairro" value={newAddress.neighborhood} onChange={e => setNewAddress({...newAddress, neighborhood: e.target.value})} required />
+                <form onSubmit={handleAddAddress} className="bg-zinc-950 border border-zinc-800 p-6 rounded-[24px] mb-6 grid grid-cols-2 md:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4">
+                   <input className="col-span-2 md:col-span-1 p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm outline-none focus:border-green-neon placeholder-zinc-600" placeholder="Apelido (Ex: Casa)" value={newAddress.label} onChange={e => setNewAddress({...newAddress, label: e.target.value})} required />
+                   <input className="col-span-2 p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm outline-none focus:border-green-neon placeholder-zinc-600" placeholder="Rua / Logradouro" value={newAddress.street} onChange={e => setNewAddress({...newAddress, street: e.target.value})} required />
+                   <input className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm outline-none focus:border-green-neon placeholder-zinc-600" placeholder="Nº" value={newAddress.number} onChange={e => setNewAddress({...newAddress, number: e.target.value})} required />
+                   <input className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm outline-none focus:border-green-neon placeholder-zinc-600" placeholder="Bairro" value={newAddress.neighborhood} onChange={e => setNewAddress({...newAddress, neighborhood: e.target.value})} required />
                    <input 
-                        className="p-3 rounded-xl border border-zinc-200 text-sm" 
+                        className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm outline-none focus:border-green-neon placeholder-zinc-600" 
                         placeholder="CEP (00000-000)" 
                         value={newAddress.cep} 
                         onChange={e => setNewAddress({...newAddress, cep: e.target.value})}
-                        onBlur={handleCepBlur} // DISPARA A BUSCA AO SAIR DO CAMPO
+                        onBlur={handleCepBlur} 
                         required 
                     />
-                   <button type="submit" className="col-span-full bg-green-forest text-white py-3 rounded-xl font-bold text-sm">CADASTRAR ENDEREÇO</button>
+                   <button type="submit" className="col-span-full bg-green-neon text-black py-3 rounded-xl font-bold text-sm hover:bg-white transition-colors">CADASTRAR ENDEREÇO</button>
                 </form>
               )}
 
               <div className="space-y-4">
                 {addresses.length === 0 ? (
-                  <p className="text-center text-zinc-400 text-sm py-4 italic">Nenhuma morada cadastrada.</p>
+                  <p className="text-center text-zinc-500 text-sm py-4 italic">Nenhuma morada cadastrada.</p>
                 ) : (
                   addresses.map((addr) => (
-                    <div key={addr.id} className="flex items-center justify-between p-5 bg-zinc-50 rounded-2xl border border-zinc-100 group">
+                    <div key={addr.id} className="flex items-center justify-between p-5 bg-zinc-950 rounded-2xl border border-zinc-800 group hover:border-green-neon/50 transition-colors">
                       <div className="flex items-start gap-4">
-                        <div className="p-3 bg-white rounded-xl shadow-sm"><Home className="w-5 h-5 text-zinc-400" /></div>
+                        <div className="p-3 bg-zinc-900 rounded-xl shadow-sm border border-zinc-800">
+                          <Home className="w-5 h-5 text-zinc-400 group-hover:text-green-neon transition-colors" />
+                        </div>
                         <div>
-                          <p className="font-bold text-urban-black">{addr.label}</p>
-                          <p className="text-xs text-zinc-500">{addr.street}, {addr.number} - {addr.neighborhood}</p>
+                          <p className="font-bold text-white">{addr.label}</p>
+                          <p className="text-xs text-zinc-400">{addr.street}, {addr.number} - {addr.neighborhood}</p>
                         </div>
                       </div>
-                      <button onClick={() => handleDeleteAddress(addr.id)} className="text-zinc-300 hover:text-red-500 p-2 transition-colors">
+                      <button onClick={() => handleDeleteAddress(addr.id)} className="text-zinc-500 hover:text-red-500 p-2 transition-colors">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -344,11 +357,11 @@ export default function ProfilePage() {
 
           {/* Atalhos Laterais */}
           <div className="space-y-4">
-            <Link href="/orders" className="block bg-urban-black p-6 rounded-[32px] text-white hover:scale-[1.02] transition-transform shadow-lg group">
+            <Link href="/orders" className="block bg-zinc-900 border border-zinc-800 p-6 rounded-[32px] text-white hover:scale-[1.02] hover:border-green-neon/50 transition-all shadow-lg group">
               <Package className="w-8 h-8 text-green-neon mb-4 group-hover:rotate-12 transition-transform" />
               <p className="font-display text-lg uppercase italic leading-tight">Meus Pedidos</p>
             </Link>
-            <Link href="/favorites" className="block bg-white border border-zinc-100 p-6 rounded-[32px] hover:scale-[1.02] transition-transform shadow-sm group">
+            <Link href="/favorites" className="block bg-zinc-900 border border-zinc-800 p-6 rounded-[32px] text-white hover:scale-[1.02] hover:border-red-500/50 transition-all shadow-sm group">
               <Heart className="w-8 h-8 text-red-500 mb-4 fill-red-500/10 group-hover:fill-red-500 transition-colors" />
               <p className="font-display text-lg uppercase italic leading-tight">Favoritos</p>
             </Link>
@@ -359,10 +372,12 @@ export default function ProfilePage() {
       {/* Toast de Notificação */}
       {toast && (
         <div className={cn(
-          "fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 z-[100]",
-          toast.type === 'success' ? "bg-green-600 text-white" : "bg-red-600 text-white"
+          "fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 z-[100] border",
+          toast.type === 'success' 
+            ? "bg-green-900/90 text-green-100 border-green-500" 
+            : "bg-red-900/90 text-red-100 border-red-500"
         )}>
-          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-green-neon" /> : <AlertCircle className="w-5 h-5 text-red-400" />}
           <span className="font-bold text-sm tracking-wide">{toast.msg}</span>
         </div>
       )}

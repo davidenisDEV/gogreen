@@ -125,7 +125,6 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
-          {/* ... Campos de Nome, Email, Senha (MANTIDOS IGUAL AO SEU CÓDIGO ANTERIOR) ... */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <div className="relative">

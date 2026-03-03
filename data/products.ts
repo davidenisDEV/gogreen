@@ -14,13 +14,15 @@ export type Product = {
 
 // CATEGORIAS ATUALIZADAS
 export const categories = [
-  { id: "kits", name: "Kits Salva-Role", icon: "📦", desc: "Kits completos" },
-  { id: "sedas", name: "Papelaria", icon: "📜", desc: "Sedas e Piteiras" },
-  { id: "fogo", name: "Fogo", icon: "🔥", desc: "Isqueiros e Maçaricos" },
-  { id: "fumos", name: "Fumos & Tabacos", icon: "🌿", desc: "Kumbaya e Tabacos" },
-  { id: "vidros", name: "Vidros & Bongs", icon: "💨", desc: "Bongs e Pipes" },
-  { id: "ferramentas", name: "Ferramentas", icon: "✂️", desc: "Tesouras e Dichavadores" },
-  { id: "acessorios", name: "Lifestyle", icon: "🧢", desc: "Bonés e Adesivos" },
+  { id: "kits", name: "Kits Salva-Rolê", icon: "📦" },
+  { id: "papelaria", name: "Papelaria", icon: "📜" },
+  { id: "fogo", name: "Fogo", icon: "🔥" },
+  { id: "fumos", name: "Fumos & Tabacos", icon: "🌿" },
+  { id: "vidros", name: "Vidros & Bongs", icon: "🔮" },
+  { id: "ferramentas", name: "Ferramentas", icon: "✂️" },
+  { id: "armazenamento", name: "Armazenamento", icon: "🏺" },
+  { id: "vaporizadores", name: "Vaporizadores", icon: "💨" },
+  { id: "lifestyle", name: "Lifestyle", icon: "🧢" },
 ];
 
 export async function getProducts() {

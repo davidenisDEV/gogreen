@@ -9,32 +9,31 @@
   }
 }
 
-/* --- ESTILO GERAL (GO GREEN) --- */
+/* --- ESTILO GERAL (GO GREEN DARK MODE) --- */
 body {
-  background-color: #ffffff;
-  color: #121212;
+  background-color: #0b0f0c; /* Urban Black */
+  color: #ffffff; /* Texto Claro */
   overflow-x: hidden;
   
-  /* Textura de Ruído Sutil (Noise) para dar materialidade ao branco */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-  background-attachment: fixed; /* O ruído fica fixo enquanto você rola a página */
+  /* Textura de Ruído Sutil (Noise) - Opacidade ajustada para o fundo escuro */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  background-attachment: fixed;
 }
 
-/* --- SCROLLBAR CUSTOMIZADA --- */
-/* Funciona no Chrome, Edge, Safari */
+/* --- SCROLLBAR CUSTOMIZADA DARK --- */
 ::-webkit-scrollbar {
   width: 10px;
-  height: 6px; /* Altura para scroll horizontal */
+  height: 6px; 
 }
 
 ::-webkit-scrollbar-track {
-  background: #f4f4f5; /* Cinza claro */
+  background: #18181b; /* zinc-900 (Escuro) */
 }
 
 ::-webkit-scrollbar-thumb {
   background: #064e3b; /* Verde Floresta */
   border-radius: 99px;
-  border: 2px solid #f4f4f5; /* Borda para dar respiro */
+  border: 2px solid #18181b; /* Borda escura para dar respiro */
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -42,18 +41,14 @@ body {
 }
 
 /* --- UTILITÁRIOS --- */
-
-/* Esconder Scrollbar (mas manter funcionalidade) */
-/* Usado no menu de categorias horizontal */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Animação Suave de Flutuar (Para imagens de produtos) */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -63,13 +58,11 @@ body {
   animation: float 4s ease-in-out infinite;
 }
 
-/* Seleção de Texto */
 ::selection {
   background-color: #39FF14; /* Neon */
   color: #000;
 }
 
-/* --- ANIMAÇÃO MARQUEE (FAIXA ROTATIVA) --- */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -81,3 +74,40 @@ body {
   width: max-content;
 }
 
+
+/* ==========================================
+   PAINEL ADMIN (FORÇAR MODO CLARO NOS INPUTS)
+   ========================================== */
+.admin-panel {
+  color-scheme: light !important;
+}
+
+.admin-panel input,
+.admin-panel select,
+.admin-panel textarea {
+  background-color: #ffffff !important;
+  color: #18181b !important;
+  border: 1px solid #e4e4e7 !important;
+}
+
+.admin-panel input::placeholder,
+.admin-panel textarea::placeholder {
+  color: #a1a1aa !important;
+  opacity: 1 !important;
+}
+
+.admin-panel input:focus,
+.admin-panel select:focus,
+.admin-panel textarea:focus {
+  border-color: #18181b !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px #18181b !important;
+}
+
+/* Exceção para checkboxes e radios para não perderem o estilo original */
+.admin-panel input[type="checkbox"],
+.admin-panel input[type="radio"] {
+  background-color: transparent !important;
+  border: 1px solid #e4e4e7 !important;
+  cursor: pointer;
+}

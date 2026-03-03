@@ -16,22 +16,26 @@
 # next.js
 /.next/
 /out/
-
-# production
-/build
+build/
 
 # misc
 .DS_Store
 *.pem
+Thumbs.db
 
-# debug
+# debug / logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files (Ignora todos os arquivos reais, mas permite modelos)
+.env
+.env.*
+!.env.example
+!.env.template
+!.env.local.example
 
 # vercel
 .vercel
@@ -39,3 +43,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# linting & caches (Evita enviar arquivos pesados de cache do Next.js)
+.eslintcache
+.stylelintcache
+
+# editors / IDEs (Evita enviar suas configurações pessoais do VSCode ou outros editores)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# chave supa / scripts locais
+supabase.py

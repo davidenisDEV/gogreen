@@ -8,7 +8,7 @@ export function NavbarGuest() {
   const { openCart, items } = useCart();
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-green-100 py-4 shadow-sm">
+    <header className="fixed top-0 w-full z-50 bg-urban-black/90 backdrop-blur-md border-b border-zinc-900 py-4 shadow-sm">
       <div className="container mx-auto px-6 flex items-center justify-between">
         
         <Link href="/" className="flex flex-col leading-none group">
