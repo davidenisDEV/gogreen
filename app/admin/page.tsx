@@ -35,6 +35,9 @@ export default function AdminPage() {
   const [salesData, setSalesData] = useState<any[]>([]);
   const [inventoryData, setInventoryData] = useState<any[]>([]);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [toast, setToast] = useState<{type: 'success' | 'error', msg: string} | null>(null);
