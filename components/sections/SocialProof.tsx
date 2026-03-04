@@ -22,7 +22,8 @@ export function SocialProof() {
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (<Star key={i} className="w-4 h-4 fill-green-neon text-green-neon" />))}
               </div>
-              <p className="text-zinc-400 font-medium mb-6 italic leading-relaxed">"{review.text}"</p>
+              {/* USO DO &quot; PARA EVITAR ERRO NO DEPLOY DA VERCEL */}
+              <p className="text-zinc-400 font-medium mb-6 italic leading-relaxed">&quot;{review.text}&quot;</p>
               <div className="flex items-center justify-between border-t border-zinc-800 pt-4">
                 <span className="font-bold text-white text-sm uppercase">{review.name}</span>
                 {review.verified && (

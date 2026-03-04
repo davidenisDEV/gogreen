@@ -13,19 +13,29 @@ export default function OrdersPage() {
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     async function fetchOrders() {
-      if (!user) return;
-      const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+      if (!user?.id) return; // Segurança extra
+      
+      try {
+        const { data, error } = await supabase
+          .from("orders")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false });
 
-      if (!error) setOrders(data || []);
-      setFetching(false);
+        if (!error && isMounted) setOrders(data || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (isMounted) setFetching(false);
+      }
     }
+    
     fetchOrders();
-  }, [user]);
+    
+    return () => { isMounted = false; }; // Cleanup para evitar vazamento de memória
+  }, [user?.id]);
 
   // Tela de Loading no modo escuro
   if (isLoading || fetching) {

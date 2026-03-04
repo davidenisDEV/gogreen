@@ -13,6 +13,7 @@ import { CommunityWall } from "@/components/sections/CommunityWall";
 import { FAQSection } from "@/components/sections/FAQSection"; 
 import { VibeMusic } from "@/components/sections/VibeMusic";
 import { AgeGate } from "@/components/ui/AgeGate";
+import { WelcomeModal } from "@/components/ui/WelcomeModal"; 
 import { WhatsAppBtn } from "@/components/floating/WhatsAppBtn";
 import { LoyaltyCard } from "@/components/floating/LoyaltyCard"; 
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -21,6 +22,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-urban-black selection:bg-green-neon selection:text-black pb-20 pt-[73px]"> 
       <AgeGate />
+      <WelcomeModal />
       <Navbar />
       
       {/* O topo carrega instantaneamente, sem delay */}

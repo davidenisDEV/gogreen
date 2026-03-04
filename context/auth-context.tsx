@@ -27,27 +27,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Busca perfil ou cria um se não existir (essencial para logins novos com Google)
   const ensureProfileExists = async (currentUser: User) => {
     try {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", currentUser.id)
-        .maybeSingle(); // Evita erro 406 se não encontrar
+        .maybeSingle();
 
       if (data) {
         setProfile(data);
       } else {
-        // Criar perfil inicial para evitar erro de FK em outras tabelas
         const { data: newProfile } = await supabase
           .from("profiles")
           .insert([
             { 
               id: currentUser.id, 
               email: currentUser.email, 
-              full_name: currentUser.user_metadata.full_name || "Membro GoGreen",
-              avatar_url: currentUser.user_metadata.avatar_url,
+              full_name: currentUser.user_metadata?.full_name || "Membro GoGreen",
+              avatar_url: currentUser.user_metadata?.avatar_url,
               role: 'user' 
             }
           ])
@@ -62,29 +60,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const initAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-        await ensureProfileExists(session.user);
-      }
-      setIsLoading(false);
-    };
+    let isMounted = true;
 
-    initAuth();
-
+    // O onAuthStateChange já é disparado automaticamente quando a página carrega.
+    // Portanto, removemos a função initAuth separada para evitar requisições duplas.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
-        setUser(session.user);
+        if (isMounted) setUser(session.user);
         await ensureProfileExists(session.user);
       } else {
-        setUser(null);
-        setProfile(null);
+        if (isMounted) {
+          setUser(null);
+          setProfile(null);
+        }
       }
-      setIsLoading(false);
+      if (isMounted) setIsLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {

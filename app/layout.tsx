@@ -5,7 +5,6 @@ import { ThemeProvider } from "./providers";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
 import { CartDrawer } from "@/components/store/CartDrawer";
-import { WelcomeModal } from "@/components/ui/WelcomeModal";
 import { cn } from "@/lib/utils";
 
 const outfit = Outfit({ 
@@ -49,8 +48,8 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              {/* O CartDrawer fica aqui porque queremos que o carrinho seja acessível em qualquer página */}
               <CartDrawer />
-              <WelcomeModal />
             </ThemeProvider>
           </CartProvider>
         </AuthProvider>

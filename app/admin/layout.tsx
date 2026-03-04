@@ -1,11 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Package, ShoppingCart, Users, LogOut, Home } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-
+import React from "react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,7 +11,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   );
 }
 
-function NavItem({ href, icon, label, active }: any) {
+// Adicionada a tipagem rigorosa para passar no Vercel Build (sem usar 'any')
+interface NavItemProps {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+}
+
+function NavItem({ href, icon, label, active }: NavItemProps) {
   return (
     <Link 
       href={href} 

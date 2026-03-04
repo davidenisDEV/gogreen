@@ -11,21 +11,32 @@ export function ProductGrid() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // AbortController é a forma mais moderna e segura de cancelar requisições 
+    // se o usuário sair da página no meio do carregamento.
+    const controller = new AbortController();
     let isMounted = true; 
+
     async function load() {
       try {
-        const data = await getProducts();
+        setLoading(true);
+        const data = await getProducts(); // A busca usa os dados protegidos em products.ts
         if (isMounted) {
           setDbProducts(data || []);
         }
       } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
+        if (error instanceof Error && error.name === 'AbortError') return;
+        console.error("Erro ao buscar vitrine:", error);
       } finally {
         if (isMounted) setLoading(false); 
       }
     }
+
     load();
-    return () => { isMounted = false; }; 
+
+    return () => { 
+      isMounted = false; 
+      controller.abort(); 
+    }; 
   }, []);
 
   const filteredProducts = activeCategory === "todos" 
@@ -69,8 +80,9 @@ export function ProductGrid() {
         </div>
 
         {loading ? (
-          <div className="text-center py-20 flex items-center justify-center gap-3 text-green-neon font-bold">
-            <Loader2 className="w-6 h-6 animate-spin" /> Carregando estoque... 
+          <div className="text-center py-20 flex flex-col items-center justify-center gap-4 text-green-neon font-bold">
+            <Loader2 className="w-8 h-8 animate-spin" /> 
+            <span className="text-sm tracking-widest uppercase">Carregando Estoque...</span>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
@@ -81,8 +93,9 @@ export function ProductGrid() {
         )}
 
         {!loading && filteredProducts.length === 0 && (
-          <div className="text-center py-20 text-zinc-500">
-            Nenhum produto em estoque nesta categoria. 💨
+          <div className="text-center py-20 text-zinc-500 flex flex-col items-center gap-4">
+            <span className="text-4xl">💨</span>
+            <p className="font-bold">Puxa, nenhum produto em estoque nesta categoria no momento.</p>
           </div>
         )}
       </div>

@@ -8,12 +8,23 @@ export function AgeGate() {
 
   useEffect(() => {
     const ageVerified = localStorage.getItem("gogreen_age_verified");
-    if (!ageVerified) setShow(true);
+    if (!ageVerified) {
+      setShow(true);
+      // Trava o scroll da página enquanto o AgeGate estiver aberto
+      document.body.style.overflow = "hidden";
+    } else {
+      // Dispara o evento imediatamente se o usuário já for verificado de visitas anteriores
+      window.dispatchEvent(new Event('ageGatePassed'));
+    }
   }, []);
 
   const handleVerify = () => {
     localStorage.setItem("gogreen_age_verified", "true");
     setShow(false);
+    document.body.style.overflow = "auto"; // Libera o scroll
+    
+    // NOVIDADE: Avisa ao resto do site que a verificação passou
+    window.dispatchEvent(new Event('ageGatePassed'));
   };
 
   if (!show) return null;
