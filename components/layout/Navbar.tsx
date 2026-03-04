@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { 
-  ShoppingBag, User, ChevronDown, History, Heart, Settings, LogOut, Search
+  ShoppingBag, User, ChevronDown, History, Heart, Settings, LogOut
 } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
@@ -15,6 +14,19 @@ export function Navbar() {
   const { user, profile, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hasItems = items.length > 0;
+
+  // 1. RESOLUÇÃO INTELIGENTE DE NOME E FOTO
+  // Procura o nome primeiro no perfil do banco, depois nos metadados da conta (ex: Google)
+  const fullName = profile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name || "";
+  const firstName = fullName ? fullName.split(' ')[0] : "Membro";
+  const avatar = profile?.avatar_url || user?.user_metadata?.avatar_url;
+
+  // 2. FUNÇÃO DE LOGOUT RIGOROSA
+  const handleSignOut = async () => {
+    setIsMenuOpen(false);
+    await signOut(); // Limpa no Supabase
+    window.location.href = "/login"; // Expulsa o usuário e recarrega a página forçadamente
+  };
 
   return (
     <header className="fixed top-0 w-full z-50 bg-urban-black/90 backdrop-blur-md border-b border-zinc-900 py-4 transition-all shadow-sm">
@@ -33,8 +45,8 @@ export function Navbar() {
                 className="flex items-center gap-2 p-1 pr-3 bg-zinc-900 rounded-full border border-zinc-800 hover:border-green-neon transition-all"
               >
                 <div className="w-8 h-8 rounded-full overflow-hidden border border-zinc-700 bg-zinc-800">
-                  {profile?.avatar_url ? (
-                    <img src={profile.avatar_url} alt="User" className="w-full h-full object-cover" />
+                  {avatar ? (
+                    <img src={avatar} alt="User Avatar" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-zinc-400">
                       <User className="w-4 h-4" />
@@ -42,7 +54,7 @@ export function Navbar() {
                   )}
                 </div>
                 <span className="text-xs font-bold text-white hidden md:block">
-                  {profile?.full_name ? profile.full_name.split(' ')[0] : "Membro"}
+                  {firstName}
                 </span>
                 <ChevronDown className={cn("w-3 h-3 text-zinc-400 transition-transform", isMenuOpen && "rotate-180")} />
               </button>
@@ -53,7 +65,7 @@ export function Navbar() {
                   <div className="absolute right-0 mt-2 w-56 bg-zinc-950 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200">
                     <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
                       <p className="text-[10px] font-black text-green-neon uppercase tracking-widest text-left">Acesso VIP</p>
-                      <p className="text-sm font-bold text-white truncate text-left mt-1">{profile?.full_name || user.email}</p>
+                      <p className="text-sm font-bold text-white truncate text-left mt-1">{fullName || user.email}</p>
                     </div>
                     
                     <div className="p-2">
@@ -69,8 +81,8 @@ export function Navbar() {
                     </div>
 
                     <button 
-                      onClick={signOut}
-                      className="w-full flex items-center gap-3 p-4 text-sm font-bold text-red-500 hover:bg-red-500/10 border-t border-zinc-800 transition-colors"
+                      onClick={handleSignOut}
+                      className="w-full flex items-center gap-3 p-4 text-sm font-bold text-red-500 hover:bg-red-500/10 border-t border-zinc-800 transition-colors text-left"
                     >
                       <LogOut className="w-4 h-4" /> Encerrar Sessão
                     </button>
