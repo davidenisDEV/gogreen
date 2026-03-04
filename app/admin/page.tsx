@@ -90,7 +90,7 @@ export default function AdminPage() {
 
     if (profile?.role === 'admin') loadMetrics();
     return () => { isMounted = false; };
-  }, [profile]);
+  }, [profile?.role]);
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();

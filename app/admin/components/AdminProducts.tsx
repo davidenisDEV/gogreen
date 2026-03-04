@@ -69,7 +69,7 @@ export function AdminProducts({ showToast }: { showToast: (type: 'success' | 'er
         .getPublicUrl(filePath);
 
       setNewProduct({ ...newProduct, image_url: publicUrl });
-      showToast('success', 'Imagem carregada com sucesso!');
+      showToast('success', 'Imagem carregada e pronta para salvar!');
 
     } catch (error) {
       console.error('Erro no upload:', error);
@@ -79,13 +79,12 @@ export function AdminProducts({ showToast }: { showToast: (type: 'success' | 'er
     }
   }
 
-  // LÓGICA DE SALVAMENTO COM PAYLOAD "LIMPO" PARA EVITAR ERRO 400
+  // LÓGICA DE SALVAMENTO
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     
-    // Mapeamento EXATO do que vai para o banco de dados. 
-    // Ignoramos a chave `image_url` e usamos apenas `image`
+    // Payload perfeitamente alinhado com as colunas do banco de dados
     const payload = {
       name: newProduct.name,
       description: newProduct.description,
@@ -93,7 +92,7 @@ export function AdminProducts({ showToast }: { showToast: (type: 'success' | 'er
       cost: newProduct.cost,
       stock: newProduct.stock,
       category: newProduct.category,
-      image: newProduct.image_url, // A coluna no banco chama 'image'
+      image_url: newProduct.image_url, // Padronizado para image_url
       points_awarded: newProduct.points_awarded,
       is_kit_item: newProduct.is_kit_item
     };
@@ -136,7 +135,7 @@ export function AdminProducts({ showToast }: { showToast: (type: 'success' | 'er
       cost: prod.cost || 0,
       stock: prod.stock, 
       category: prod.category, 
-      image_url: prod.image || "", // Puxa do banco como 'image'
+      image_url: prod.image_url || prod.image || "", // Aceita ambos os formatos antigos se existirem
       points_awarded: prod.points_awarded || 0, 
       is_kit_item: prod.is_kit_item || false
     });
@@ -257,7 +256,8 @@ export function AdminProducts({ showToast }: { showToast: (type: 'success' | 'er
               <tr key={prod.id} className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors text-sm">
                 <td className="p-4 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-zinc-100 border border-zinc-200 overflow-hidden shrink-0">
-                     <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" onError={(e) => (e.currentTarget.src = "https://via.placeholder.com/40")} />
+                     {/* Carrega a imagem da URL correta e tem um fallback para itens antigos sem foto */}
+                     <img src={prod.image_url || prod.image || "https://via.placeholder.com/40"} alt={prod.name} className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <p className="font-bold text-zinc-900">{prod.name}</p>
