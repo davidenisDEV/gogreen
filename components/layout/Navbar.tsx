@@ -11,21 +11,19 @@ import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const { openCart, items } = useCart();
-  const { user, profile, signOut } = useAuth();
+  // ADICIONADO: Puxando o isLoading para evitar o "piscar" da tela
+  const { user, profile, signOut, isLoading } = useAuth(); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hasItems = items.length > 0;
 
-  // 1. RESOLUÇÃO INTELIGENTE DE NOME E FOTO
-  // Procura o nome primeiro no perfil do banco, depois nos metadados da conta (ex: Google)
   const fullName = profile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name || "";
   const firstName = fullName ? fullName.split(' ')[0] : "Membro";
   const avatar = profile?.avatar_url || user?.user_metadata?.avatar_url;
 
-  // 2. FUNÇÃO DE LOGOUT RIGOROSA
   const handleSignOut = async () => {
     setIsMenuOpen(false);
-    await signOut(); // Limpa no Supabase
-    window.location.href = "/login"; // Expulsa o usuário e recarrega a página forçadamente
+    await signOut();
+    window.location.href = "/login";
   };
 
   return (
@@ -38,7 +36,11 @@ export function Navbar() {
         </Link>
 
         <div className="flex items-center gap-4">
-          {user ? (
+          {/* LÓGICA DE TRANSIÇÃO SUAVE */}
+          {isLoading ? (
+            // Exibe um "fantasma" pulsante enquanto verifica se está logado
+            <div className="w-24 h-10 bg-zinc-900 rounded-full animate-pulse border border-zinc-800"></div>
+          ) : user ? (
             <div className="relative">
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
