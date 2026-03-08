@@ -1,50 +1,49 @@
 
-# 🌱 GoGreen
+# 🍁 GoGreen Headshop & SaaS
 
-Uma landing page moderna, estratégica e orientada à conversão, criada para marcas que desejam unir **tecnologia, sustentabilidade e posicionamento premium** em um único produto digital.
+Uma plataforma híbrida de **E-commerce e Ponto de Venda (PDV)** moderna, estratégica e orientada à conversão. Criada para unir cultura urbana, redução de danos e alta tecnologia em um único ecossistema digital.
 
-GoGreen não é apenas um site.  
-É uma experiência pensada para gerar autoridade, conexão e conversão.
+A GoGreen não é apenas um site. É uma operação comercial completa pensada para gerar autoridade, gerenciar clientes e escalar vendas físicas e online.
 
 ---
 
 ## 🚀 Sobre o Projeto
 
-A **GoGreen** foi desenvolvida como uma solução visual e estratégica para negócios que desejam:
+A **GoGreen** foi desenvolvida do zero como uma solução full-stack para resolver os gargalos de uma tabacaria moderna. O sistema atua em duas frentes:
 
-- Comunicar inovação e consciência ambiental  
-- Apresentar serviços de forma clara e persuasiva  
-- Gerar leads qualificados  
-- Fortalecer posicionamento de marca  
+1. **Vitrine para o Cliente:** Uma loja virtual rápida, com verificação de idade (Age Gate), montador de kits dinâmico, clube de fidelidade e checkout direto para o WhatsApp.
+2. **Painel Admin (SaaS):** Um back-office seguro para o lojista gerenciar o estoque, atualizar pontos VIP dos clientes (CRM), faturar vendas de balcão (PDV) e acompanhar métricas em tempo real.
 
-O projeto combina design moderno, identidade forte e estrutura pensada para performance e resultado.
+O projeto combina um design *Dark Mode* imersivo com uma arquitetura de software robusta, preparada para performance e escalabilidade.
+
+## ⚙️ Funcionalidades e Arquitetura
+
+A plataforma foi estruturada em microsserviços para garantir fluidez e escalabilidade:
+
+- **Vitrine e Conversão:** Verificação de idade (Age Gate), montador interativo de kits, clube de vantagens e checkout otimizado direto para o WhatsApp.
+- **Admin SaaS e PDV:** Frente de caixa digital para vendas físicas, CRM com gestão de pontos VIP, controle de inventário em tempo real e exportação de relatórios financeiros em formato `.CSV`.
+
+---
+
+## 🛠️ Stack de Tecnologias
+
+Projeto desenvolvido com o ecossistema mais moderno e performático do mercado:
+
+- **Framework:** Next.js 14 (App Router, Server Components)
+- **Linguagens/Estilo:** TypeScript e Tailwind CSS (Dark Theme nativo)
+- **Backend (BaaS):** Supabase (PostgreSQL relacional)
+- **Segurança e Nuvem:** Autenticação Google OAuth, Row Level Security (RLS) e Supabase Storage para imagens.
 
 ---
 
-## 🎯 O Que a Landing Page Oferece
+## 🚀 Como Executar Localmente
 
-### ✨ Hero Section Impactante
-- Mensagem clara e objetiva  
-- Call-to-action estratégico  
-- Visual forte e memorável  
+Para rodar o projeto na sua máquina para testes ou desenvolvimento:
 
-### 🌿 Posicionamento de Marca
-- Comunicação alinhada com sustentabilidade e inovação  
-- Identidade visual moderna e tecnológica  
-- Branding consistente  
-
-### 📊 Estrutura Estratégica de Conversão
-- Seção de benefícios  
-- Apresentação de proposta de valor  
-- Prova social e credibilidade  
-- CTA final otimizado  
-
-### 📱 Experiência Responsiva
-- Layout adaptável para desktop e mobile  
-- Navegação fluida  
-- Experiência moderna e intuitiva  
-
----
+1. Clone o repositório para o seu computador.
+2. Abra o terminal na pasta do projeto e rode o comando `npm install` para baixar as dependências.
+3. Crie um arquivo chamado `.env.local` na raiz do projeto e insira as suas chaves do banco de dados (`NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+4. Inicie o servidor local com o comando `npm run dev` e acesse no navegador.
 
 ## 💼 Para Quem é a GoGreen?
 
@@ -76,10 +75,26 @@ A GoGreen representa a união entre:
 
 Um modelo de landing page adaptável para diferentes nichos, mantendo identidade forte e foco em resultado.
 
+## 🗺️ Roadmap (Próximos Passos)
+
+Como um ecossistema em evolução constante, as próximas atualizações previstas para a arquitetura da GoGreen incluem:
+
+- [ ] **Integração de Gateway de Pagamento:** Webhooks com Mercado Pago/Stripe para aprovação automática e baixa instantânea de estoque.
+- [ ] **WebSockets (Real-time):** Atualização do Kanban de pedidos no Painel Admin em tempo real via Supabase Subscriptions, sem necessidade de *refresh*.
+- [ ] **Business Intelligence Avançado:** Implementação de bibliotecas de gráficos (como Recharts) para visualização de lucros, giro de estoque e retenção de clientes VIP.
+
 ---
 
-## 📩 Contato
+## 📞 Contato & Links
 
-Interessado em adaptar a GoGreen para o seu negócio ou criar uma solução personalizada?
+Projeto projetado e desenvolvido por **David Denis** como demonstração de arquitetura Full-Stack, UI/UX orientada à conversão e integração de banco de dados em nuvem (SaaS).
 
-Entre em contato e vamos desenvolver algo estratégico para sua marca.
+- **Projeto ao Vivo:** [Acessar GoGreen](https://gogreen-4fmn.vercel.app/)
+- **Meu Portfólio:** [Acessar Portfólio](https://master-wbcr.vercel.app/) 
+- **LinkedIn:** [Conectar no LinkedIn](https://www.linkedin.com/in/daviddenisdev/) 
+
+---
+
+## 📝 Licença
+
+Este é um projeto desenvolvido com foco em portfólio e demonstração técnica. Sinta-se à vontade para explorar o código, analisar a arquitetura ou utilizar a base para os seus próprios estudos de Next.js e Supabase.
