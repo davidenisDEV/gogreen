@@ -195,7 +195,7 @@ export function CartDrawer() {
             </div>
             
             <button 
-              disabled={!isMinOrderReached || (user && userAddresses.length === 0)}
+              disabled={!isMinOrderReached || (user !== null && userAddresses.length === 0)}
               onClick={handleCheckout}
               className={`w-full font-display text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg ${
                 !isMinOrderReached 
