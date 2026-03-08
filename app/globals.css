@@ -5,83 +5,89 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 145 0% 10%; /* Urban Black */
+    --foreground: 145 0% 10%;
+  }
+  .dark {
+    --background: 145 0% 5%; /* Dark Clean Premium */
+    --foreground: 0 0% 100%;
+    /* Verde Forte Premium (não mais neon) */
+    --primary: 142 71% 45%; 
+    --primary-foreground: 0 0% 0%;
   }
 }
 
-/* --- ESTILO GERAL (GO GREEN DARK MODE) --- */
+/* --- ESTILO GERAL (DARK CLEAN) --- */
 body {
-  background-color: #0b0f0c; /* Urban Black */
-  color: #ffffff; /* Texto Claro */
+  background-color: #080a09; 
+  color: #ffffff;
   overflow-x: hidden;
   
-  /* Textura de Ruído Sutil (Noise) - Opacidade ajustada para o fundo escuro */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  /* Textura de Ruído SUPER Leve e Elegante (Grain) */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
   background-attachment: fixed;
 }
 
-/* --- SCROLLBAR CUSTOMIZADA DARK --- */
+/* --- SCROLLBAR PREMIUM --- */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
   height: 6px; 
 }
-
 ::-webkit-scrollbar-track {
-  background: #18181b; /* zinc-900 (Escuro) */
+  background: #080a09;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #064e3b; /* Verde Floresta */
-  border-radius: 99px;
-  border: 2px solid #18181b; /* Borda escura para dar respiro */
+  background: #1a231c; 
+  border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #39FF14; /* Verde Neon ao passar o mouse */
-}
-
-/* --- UTILITÁRIOS --- */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
+  background: #22c55e;
 }
 
 ::selection {
-  background-color: #39FF14; /* Neon */
+  background-color: #22c55e; 
   color: #000;
+}
+
+/* --- ANIMAÇÕES SUAVIZADAS --- */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); } /* Menos salto, mais suave */
+}
+.animate-float {
+  animation: float 5s ease-in-out infinite; /* Mais lento */
 }
 
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
-
 .animate-marquee {
-  animation: marquee 20s linear infinite;
+  animation: marquee 25s linear infinite;
   display: flex;
   width: max-content;
 }
 
+/* Efeito de Respiração (MUITO mais sutil e elegante) */
+@keyframes breath {
+  0%, 100% { transform: scale(1); opacity: 0.15; }
+  50% { transform: scale(1.05); opacity: 0.25; }
+}
+.animate-breath {
+  animation: breath 8s infinite ease-in-out;
+}
 
-/* ==========================================
-   PAINEL ADMIN (FORÇAR MODO CLARO NOS INPUTS)
-   ========================================== */
+/* Glassmorphism Utility (Vidro Fosco Sutil) */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* PAINEL ADMIN */
 .admin-panel {
   color-scheme: light !important;
 }
-
 .admin-panel input,
 .admin-panel select,
 .admin-panel textarea {
@@ -89,25 +95,7 @@ body {
   color: #18181b !important;
   border: 1px solid #e4e4e7 !important;
 }
-
 .admin-panel input::placeholder,
 .admin-panel textarea::placeholder {
   color: #a1a1aa !important;
-  opacity: 1 !important;
-}
-
-.admin-panel input:focus,
-.admin-panel select:focus,
-.admin-panel textarea:focus {
-  border-color: #18181b !important;
-  outline: none !important;
-  box-shadow: 0 0 0 1px #18181b !important;
-}
-
-/* Exceção para checkboxes e radios para não perderem o estilo original */
-.admin-panel input[type="checkbox"],
-.admin-panel input[type="radio"] {
-  background-color: transparent !important;
-  border: 1px solid #e4e4e7 !important;
-  cursor: pointer;
 }

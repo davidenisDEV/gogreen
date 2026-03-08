@@ -1,107 +1,85 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Lock, Mail, Loader2, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ArrowLeft, Loader2, Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleGoogleLogin = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/`, 
-      },
-    });
-    if (error) {
-      alert(error.message);
-      setLoading(false);
-    }
-  };
-
-  const handleEmailLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    
-    if (error) {
-      alert("Credenciais inválidas");
-      setLoading(false);
-    } else {
+    setError(null);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+      
       router.push("/");
-      router.refresh();
+    } catch (err: any) {
+      setError("Credenciais inválidas. Verifique o seu e-mail e palavra-passe.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 p-8 rounded-[32px] shadow-2xl">
-        <Link href="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-green-neon mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Voltar para a Loja
-        </Link>
-        
-        <h1 className="font-display text-3xl text-white uppercase italic mb-2 text-center">GoGreen VIP</h1>
-        <p className="text-zinc-500 text-sm text-center mb-8">Acesse sua conta para gerenciar seu kit.</p>
+    <main className="min-h-screen bg-[#080a09] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-green-600/5 blur-[120px] rounded-full pointer-events-none"></div>
+      
+      <Link href="/" className="absolute top-8 left-8 text-zinc-500 hover:text-white flex items-center gap-2 transition-colors font-bold text-sm">
+        <ArrowLeft className="w-4 h-4" /> Voltar à Loja
+      </Link>
 
-        <button 
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          className="w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all mb-6"
-        >
-          <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="Google" />
-          ENTRAR COM GOOGLE
-        </button>
-
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-800"></div></div>
-          <div className="relative flex justify-center text-xs uppercase"><span className="bg-zinc-900 px-2 text-zinc-500">Ou use seu e-mail</span></div>
+      <div className="w-full max-w-md bg-white/[0.02] border border-white/[0.05] p-8 md:p-10 rounded-[32px] backdrop-blur-md relative z-10 shadow-2xl">
+        <div className="text-center mb-8">
+          <h1 className="font-display text-3xl text-white mb-2">Bem-vindo de volta</h1>
+          <p className="text-zinc-400 text-sm">Entre na sua conta para aceder aos seus pontos.</p>
         </div>
 
-        <form onSubmit={handleEmailLogin} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-400 uppercase">E-mail</label>
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-sm p-4 rounded-xl mb-6 text-center">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 block">E-mail</label>
             <div className="relative">
-              <Mail className="absolute left-4 top-3.5 w-5 h-5 text-zinc-600" />
-              <input 
-                type="email" 
-                required
-                className="w-full bg-zinc-800/50 border border-zinc-700 text-white pl-12 pr-4 py-3 rounded-xl outline-none focus:border-green-neon transition-all"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="o-seu-email@exemplo.com" className="w-full bg-[#080a09] border border-zinc-800 text-white p-4 pl-12 rounded-xl outline-none focus:border-green-500 transition-colors text-sm" />
+              <Mail className="absolute left-4 top-4 w-5 h-5 text-zinc-600 pointer-events-none" />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-400 uppercase">Senha</label>
+          <div>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Palavra-passe</label>
             <div className="relative">
-              <Lock className="absolute left-4 top-3.5 w-5 h-5 text-zinc-600" />
-              <input 
-                type="password" 
-                required
-                className="w-full bg-zinc-800/50 border border-zinc-700 text-white pl-12 pr-4 py-3 rounded-xl outline-none focus:border-green-neon transition-all"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" className="w-full bg-[#080a09] border border-zinc-800 text-white p-4 pl-12 rounded-xl outline-none focus:border-green-500 transition-colors text-sm" />
+              <Lock className="absolute left-4 top-4 w-5 h-5 text-zinc-600 pointer-events-none" />
             </div>
           </div>
 
-          <button 
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-neon text-black font-display text-lg py-4 rounded-xl hover:scale-[1.02] transition-transform flex items-center justify-center"
-          >
-            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "ACESSAR CONTA"}
+          <button type="submit" disabled={loading} className="w-full bg-green-500 text-black font-bold py-4 rounded-xl mt-4 hover:bg-white transition-all flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.2)] disabled:opacity-50">
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Entrar na Conta"}
           </button>
         </form>
+
+        <p className="text-center text-zinc-500 text-sm mt-8">
+          Ainda não tem conta? <Link href="/register" className="text-green-500 font-bold hover:underline">Registe-se aqui</Link>
+        </p>
       </div>
-    </div>
+    </main>
   );
 }

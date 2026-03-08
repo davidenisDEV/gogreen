@@ -30,12 +30,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const closeCart = () => setIsCartOpen(false);
 
   const addToCart = (product: Product) => {
-    if (!user) {
-      alert("🍁 Salve! Você precisa entrar na sua conta para montar seu kit.");
-      router.push("/login");
-      return;
-    }
-
     setItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {

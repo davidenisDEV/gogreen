@@ -16,7 +16,6 @@ export function KitBuilder() {
   const [loading, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
 
-  
   useEffect(() => {
     let isMounted = true;
     async function load() {
@@ -27,7 +26,14 @@ export function KitBuilder() {
         ]);
 
         if (isMounted) {
-          if (prodsRes.data) setDbProducts(prodsRes.data);
+          if (prodsRes.data) {
+            // Mapeando para garantir que a imagem venha da coluna certa (image_url ou fallback)
+            const formattedProducts = prodsRes.data.map(p => ({
+              ...p,
+              image: p.image_url || p.image || '/products/placeholder.png'
+            }));
+            setDbProducts(formattedProducts);
+          }
           if (settingsRes.data) {
              const disc = settingsRes.data.find(s => s.id === "kit_discount_percent");
              const vis = settingsRes.data.find(s => s.id === "kit_builder_visible");
@@ -67,7 +73,7 @@ export function KitBuilder() {
       name: `Kit Personalizado (${discountPercent}% OFF)`,
       price: total,
       category: "kits",
-      image: "/products/kit_start.png", 
+      image: "/instafeed/kitfire.webp", 
       isNew: false
     };
     addToCart(customKit);
@@ -89,7 +95,6 @@ export function KitBuilder() {
   const isStepComplete = selections[currentStepData.id];
   const isFinished = Object.keys(selections).length === steps.length;
 
-  // Se o admin desligou no painel, nem renderiza o componente inteiro!
   if (!isVisible) return null;
 
   return (
@@ -119,7 +124,19 @@ export function KitBuilder() {
                         key={option.id} onClick={() => handleSelect(currentStepData.id, option)}
                         className={`cursor-pointer rounded-2xl p-4 border transition-all group relative ${selections[currentStepData.id]?.id === option.id ? "border-green-neon bg-green-neon/10" : "border-zinc-800 bg-zinc-950 hover:border-green-neon/50"}`}
                     >
-                        <div className="aspect-square bg-zinc-900 rounded-xl mb-3 flex items-center justify-center text-3xl border border-zinc-800">{option.category === 'papelaria' ? '📜' : '🔥'}</div>
+                        {/* AQUI ESTÁ A MÁGICA DA IMAGEM */}
+                        <div className="aspect-square bg-white/[0.02] rounded-xl mb-3 flex items-center justify-center text-3xl border border-white/[0.05] overflow-hidden relative">
+                          {option.image && option.image !== '/products/placeholder.png' ? (
+                            <img 
+                              src={option.image} 
+                              alt={option.name} 
+                              className="w-[80%] h-[80%] object-contain drop-shadow-lg transition-transform group-hover:scale-110" 
+                            />
+                          ) : (
+                            <span>{option.category === 'papelaria' ? '📜' : '🔥'}</span>
+                          )}
+                        </div>
+
                         <h4 className="font-bold text-white text-sm leading-tight">{option.name}</h4>
                         <p className="text-zinc-400 text-sm mt-1">R$ {option.price.toFixed(2)}</p>
                         {selections[currentStepData.id]?.id === option.id && (<div className="absolute top-2 right-2 bg-green-neon rounded-full p-1 shadow-[0_0_10px_rgba(57,255,20,0.5)]"><Check className="w-3 h-3 text-black" /></div>)}

@@ -7,6 +7,7 @@ import { AuthProvider } from "@/context/auth-context";
 import { CartDrawer } from "@/components/store/CartDrawer";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/site-config"; // Importando Config
 
 const outfit = Outfit({ 
   subsets: ["latin"], 
@@ -21,8 +22,8 @@ const dela = Dela_Gothic_One({
 });
 
 export const metadata: Metadata = {
-  title: "GoGreen Headshop | Urban Culture",
-  description: "Sua headshop favorita. Kits, Sedas e Acessórios com entrega rápida via Uber Flash.",
+  title: `${siteConfig.name} | Urban Culture`,
+  description: siteConfig.description,
 };
 
 export default function RootLayout({
@@ -34,11 +35,17 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body 
         className={cn(
-          "min-h-screen bg-urban-black text-white font-sans antialiased selection:bg-green-neon selection:text-black", 
+          "min-h-screen text-white font-sans antialiased", 
           outfit.variable, 
           dela.variable 
         )}
       >
+        {/* --- LUZES DE FUNDO RESPIRANDO (ULTRA SUTIS) --- */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+          <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-green-600/5 blur-[150px] rounded-full animate-breath"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-green-500/5 blur-[120px] rounded-full animate-breath" style={{ animationDelay: '4s' }}></div>
+        </div>
+
         <AuthProvider>
           <CartProvider>
             <ThemeProvider
@@ -49,11 +56,11 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
-              {/* O CartDrawer fica aqui porque queremos que o carrinho seja acessível em qualquer página */}
               <CartDrawer />
             </ThemeProvider>
           </CartProvider>
         </AuthProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
