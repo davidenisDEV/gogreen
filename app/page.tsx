@@ -19,7 +19,8 @@ import { WelcomeModal } from "@/components/ui/WelcomeModal";
 import { WhatsAppBtn } from "@/components/floating/WhatsAppBtn";
 import { LoyaltyCard } from "@/components/floating/LoyaltyCard"; 
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { siteConfig } from "@/config/site-config"; // PUXANDO CONFIGS
+import { Footer } from "@/components/layout/Footer";
+import { siteConfig } from "@/config/site-config";
 
 // --- SUB-COMPONENTE: TEXTURA DE CHUVISCO ULTRA SUAVE ---
 const NoiseOverlay = () => (
@@ -31,7 +32,7 @@ export default function Home() {
   const { altTexts } = siteConfig.ui;
 
   return (
-    <main className="min-h-screen bg-transparent selection:bg-green-500 selection:text-black pb-20 pt-[73px] overflow-hidden"> 
+    <main className="min-h-screen bg-transparent selection:bg-green-500 selection:text-black pt-[73px] overflow-hidden"> 
       <AgeGate />
       <WelcomeModal />
       <Navbar />
@@ -132,6 +133,8 @@ export default function Home() {
       <CommunityWall />
       <FAQSection />
       <VibeMusic />
+
+      <Footer />
 
       <WhatsAppBtn />
       <LoyaltyCard />
